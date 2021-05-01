@@ -1,9 +1,8 @@
 from selenium import webdriver
 from getpass import getpass
 ##Logging in to Verizon FIOS
-username = "dauryl.belle"
-password = "Xwn0g^7fY&Yc5"
-#password = getpass("Enter password: ")
+username = input("Enter user: ")
+password = getpass("Enter password: ")
 
 
 driver = webdriver.Chrome("/Users/dauryl/Documents/dbelle_scripts/get_FIOS_bill/chromedriver")
