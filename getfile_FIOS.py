@@ -5,7 +5,7 @@ username = input("Enter user: ")
 password = getpass("Enter password: ")
 
 
-driver = webdriver.Chrome("/Users/dauryl/Documents/dbelle_scripts/get_FIOS_bill/chromedriver")
+driver = webdriver.Chrome("/Users/dbelle/Documents/dbelle_scripts/get_FIOS_bill/chromedriver")
 driver.get("https://secure.verizon.com/vzauth/UI/Login")
 
 driver.implicitly_wait(5)
@@ -24,4 +24,3 @@ view_bill.click()
 
 download = driver.find_element_by_partial_link_text("Download PDF")
 download.click()
-
