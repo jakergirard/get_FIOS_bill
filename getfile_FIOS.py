@@ -38,13 +38,11 @@ from email.mime.text import MIMEText
 # password = getpass("Type your password and press enter: ")
 
 # Create a secure SSL context
-port = 1025  # For SSL
-smtp_server = "localhost"
 subject = "An email with attachment from Python"
 body = "This is an email with attachment sent from Python"
-sender_email = "my@gmail.com"
-receiver_email = "your@gmail.com"
-# password = input("Type your password and press enter:")
+sender_email = "tt5775030@gmail.com"
+receiver_email = "dauryl.belle@gmail.com"
+password = getpass("Type your password and press enter:")
 
 # Create a multipart message and set headers
 message = MIMEMultipart()
@@ -80,6 +78,6 @@ text = message.as_string()
 
 # Log in to server using secure context and send email
 context = ssl.create_default_context()
-with smtplib.SMTP(smtp_server, port) as server:
-    # server.login(sender_email, password)
+with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+    server.login(sender_email, password)
     server.sendmail(sender_email, receiver_email, text)
