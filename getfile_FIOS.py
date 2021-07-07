@@ -6,12 +6,18 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import time
+import os
 
-#Logging in to Verizon FIOS
-username = input("Enter FIOS user: ")
-password = getpass("Enter FIOS password: ")
-password_email = getpass("Enter gmail password: ")
-
+#Delete file if it already exists
+try:
+    os.remove('/Users/dbelle/Downloads/paper-bill.pdf')
+except OSError:
+    pass
+    
+#Auth using env variables
+username = os.environ.get('USERNAME')
+password = os.environ.get('PASSWORD')
+password_email = os.environ.get('PASSWORD_EMAIL')
 
 driver = webdriver.Chrome("/Users/dbelle/Documents/dbelle_scripts/get_FIOS_bill/chromedriver")
 driver.get("https://secure.verizon.com/vzauth/UI/Login")
@@ -34,7 +40,6 @@ secret_question.send_keys("Trinidad")
 continue_button = driver.find_element_by_id("otherButton")
 continue_button.submit()
 
-
 view_bill = driver.find_element_by_partial_link_text("View Bill Detail")
 view_bill.click()
 
@@ -48,7 +53,6 @@ subject = "An email with attachment from Python"
 body = "This is an email with attachment sent from Python"
 sender_email = "tt5775030@gmail.com"
 receiver_email = "dauryl.belle@gmail.com"
-
 
 # Create a multipart message and set headers
 message = MIMEMultipart()
