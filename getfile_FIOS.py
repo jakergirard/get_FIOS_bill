@@ -13,7 +13,7 @@ try:
     os.remove('/Users/dbelle/Downloads/paper-bill.pdf')
 except OSError:
     pass
-    
+
 #Auth using env variables
 username = os.environ.get('USERNAME')
 password = os.environ.get('PASSWORD')
@@ -52,7 +52,7 @@ time.sleep(5) # Sleep for 3 seconds
 subject = "An email with attachment from Python"
 body = "This is an email with attachment sent from Python"
 sender_email = "tt5775030@gmail.com"
-receiver_email = "dauryl.belle@gmail.com"
+receiver_email = "dbelle@salesforce.com"
 
 # Create a multipart message and set headers
 message = MIMEMultipart()
