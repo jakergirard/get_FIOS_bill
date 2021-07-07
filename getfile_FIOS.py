@@ -27,6 +27,14 @@ password_textbox.send_keys(password)
 login_button = driver.find_element_by_id("login-submit")
 login_button.submit()
 
+#Challenge Question
+secret_question = driver.find_element_by_id("IDToken1")
+secret_question.send_keys("Trinidad")
+
+continue_button = driver.find_element_by_id("otherButton")
+continue_button.submit()
+
+
 view_bill = driver.find_element_by_partial_link_text("View Bill Detail")
 view_bill.click()
 
