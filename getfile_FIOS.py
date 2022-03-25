@@ -36,16 +36,18 @@ login_button.submit()
 #Challenge Question
 def check_exists_by_xpath(xpath):
     try:
-        driver.find_element_by_partial_link_text("IDToken2")
+        driver.find_element_by_partial_link_text("IDToken1")
     except NoSuchElementException:
         return False
     return True
 
-if True:
-    secret_question = driver.find_element_by_id("IDToken1")
-    secret_question.send_keys("Trinidad")
-    continue_button = driver.find_element_by_id("otherButton")
-    continue_button.submit()
+if check_exists_by_xpath == True:
+        secret_question = driver.find_element_by_id("IDToken1")
+        secret_question.send_keys("Trinidad")
+        continue_button = driver.find_element_by_id("otherButton")
+        continue_button.submit()
+
+driver.implicitly_wait(5)
 
 view_bill = driver.find_element_by_partial_link_text("View Bill Detail")
 view_bill.click()
