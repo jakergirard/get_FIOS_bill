@@ -47,7 +47,7 @@ if check_exists_by_xpath == True:
         continue_button = driver.find_element_by_id("otherButton")
         continue_button.submit()
 
-driver.implicitly_wait(5)
+driver.implicitly_wait(20)
 
 view_bill = driver.find_element_by_partial_link_text("View Bill Detail")
 view_bill.click()
