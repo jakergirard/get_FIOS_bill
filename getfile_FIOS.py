@@ -18,6 +18,10 @@ except OSError:
 username = os.environ.get('USERNAME')
 password = os.environ.get('PASSWORD')
 password_email = os.environ.get('PASSWORD_EMAIL')
+receiver_email = os.environ.get('RECEIVER_EMAIL')
+secret_question_answer = os.environ.get('SECRET_QUESTION')
+sender_email = "tt5775030@gmail.com"
+
 
 driver = webdriver.Chrome("/Users/dbelle/Documents/dbelle_scripts/get_FIOS_bill/chromedriver")
 driver.get("https://secure.verizon.com/vzauth/UI/Login")
@@ -43,7 +47,7 @@ def check_exists_by_xpath(xpath):
 
 if check_exists_by_xpath == True:
         secret_question = driver.find_element_by_id("IDToken1")
-        secret_question.send_keys("Trinidad")
+        secret_question.send_keys(secret_question_answer)
         continue_button = driver.find_element_by_id("otherButton")
         continue_button.submit()
 
@@ -62,15 +66,12 @@ driver.close()
 # Create a secure SSL context
 subject = "An email with attachment from Python"
 body = "This is an email with attachment sent from Python"
-sender_email = "tt5775030@gmail.com"
-receiver_email = "dbelle@salesforce.com"
 
 # Create a multipart message and set headers
 message = MIMEMultipart()
 message["From"] = sender_email
 message["To"] = receiver_email
 message["Subject"] = subject
-message["Bcc"] = receiver_email  # Recommended for mass emails
 
 # Add body to email
 message.attach(MIMEText(body, "plain"))
