@@ -1,6 +1,8 @@
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from getpass import getpass
-import smtplib, ssl
+import smtplib
+import ssl
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -8,13 +10,13 @@ from email.mime.text import MIMEText
 import time
 import os
 
-#Delete file if it already exists
+# Delete file if it already exists
 try:
     os.remove('/Users/dbelle/Downloads/paper-bill.pdf')
 except OSError:
     pass
 
-#Auth using env variables
+# Auth using env variables
 username = os.environ.get('USERNAME')
 password = os.environ.get('PASSWORD')
 password_email = os.environ.get('PASSWORD_EMAIL')
@@ -23,7 +25,8 @@ secret_question_answer = os.environ.get('SECRET_QUESTION')
 sender_email = "tt5775030@gmail.com"
 
 
-driver = webdriver.Chrome("/Users/dbelle/Documents/dbelle_scripts/get_FIOS_bill/chromedriver")
+driver = webdriver.Chrome(
+    "/Users/dbelle/Documents/dbelle_scripts/get_FIOS_bill/chromedriver")
 driver.get("https://secure.verizon.com/vzauth/UI/Login")
 
 driver.implicitly_wait(5)
@@ -37,7 +40,9 @@ password_textbox.send_keys(password)
 login_button = driver.find_element_by_id("login-submit")
 login_button.submit()
 
-#Challenge Question
+# Challenge Question
+
+
 def check_exists_by_xpath(xpath):
     try:
         driver.find_element_by_partial_link_text("IDToken1")
@@ -45,11 +50,13 @@ def check_exists_by_xpath(xpath):
         return False
     return True
 
+
 if check_exists_by_xpath == True:
-        secret_question = driver.find_element_by_id("IDToken1")
-        secret_question.send_keys(secret_question_answer)
-        continue_button = driver.find_element_by_id("otherButton")
-        continue_button.submit()
+    secret_question = driver.find_element_by_id("IDToken1")
+    secret_question.send_keys(secret_question_answer)
+    continue_button = driver.find_element_by_id("otherButton")
+    continue_button.submit()
+
 
 driver.implicitly_wait(20)
 
@@ -59,7 +66,7 @@ view_bill.click()
 download = driver.find_element_by_partial_link_text("Download PDF")
 download.click()
 
-time.sleep(5) # Sleep for 3 seconds
+time.sleep(5)  # Sleep for 3 seconds
 
 driver.close()
 
