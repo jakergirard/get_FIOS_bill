@@ -41,17 +41,14 @@ login_button = driver.find_element_by_id("login-submit")
 login_button.submit()
 
 # Challenge Question
-
-
 def check_exists_by_xpath(xpath):
     try:
-        driver.find_element_by_partial_link_text("IDToken1")
+        driver.find_element_by_xpath(xpath)
     except NoSuchElementException:
         return False
     return True
 
-
-if check_exists_by_xpath == True:
+if check_exists_by_xpath("//input[@id='IDToken1']"):
     secret_question = driver.find_element_by_id("IDToken1")
     secret_question.send_keys(secret_question_answer)
     continue_button = driver.find_element_by_id("otherButton")
