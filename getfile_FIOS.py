@@ -1,3 +1,5 @@
+import os
+import platform
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from getpass import getpass
@@ -8,13 +10,31 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import time
-import os
+
+# Detect the current platform
+current_platform = platform.system()
+
+# Set up Chrome options
+options = webdriver.ChromeOptions()
+
+if current_platform == 'Linux':
+    # Set up headless mode for Linux (Ubuntu server)
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+chromedriver_path = '/usr/local/bin/chromedriver' if current_platform == 'Linux' else '/Users/dbelle/Documents/dbelle_scripts/get_FIOS_bill/chromedriver'
+
+driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
 
 # Delete file if it already exists
+pdf_path = "/Users/dbelle/Downloads/paper-bill.pdf" if current_platform == 'Darwin' else "/path/to/your/ubuntu/pdf/location/paper-bill.pdf"
+
 try:
-    os.remove('/Users/dbelle/Downloads/paper-bill.pdf')
+    os.remove(pdf_path)
 except OSError:
     pass
+
 
 # Auth using env variables
 username = os.environ.get('USERNAME')
@@ -41,12 +61,15 @@ login_button = driver.find_element_by_id("login-submit")
 login_button.submit()
 
 # Challenge Question
+
+
 def check_exists_by_xpath(xpath):
     try:
         driver.find_element_by_xpath(xpath)
     except NoSuchElementException:
         return False
     return True
+
 
 if check_exists_by_xpath("//input[@id='IDToken1']"):
     secret_question = driver.find_element_by_id("IDToken1")
