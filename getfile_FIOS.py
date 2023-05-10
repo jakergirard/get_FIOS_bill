@@ -25,6 +25,7 @@ if current_platform == 'Linux':
 
 chromedriver_path = '/usr/local/bin/chromedriver' if current_platform == 'Linux' else '/Users/dbelle/Documents/dbelle_scripts/get_FIOS_bill/chromedriver'
 
+# Initialize the webdriver with the new syntax
 driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
 
 # Delete file if it already exists
@@ -45,8 +46,6 @@ secret_question_answer = os.environ.get('SECRET_QUESTION')
 sender_email = "tt5775030@gmail.com"
 
 
-driver = webdriver.Chrome(
-    "/Users/dbelle/Documents/dbelle_scripts/get_FIOS_bill/chromedriver")
 driver.get("https://secure.verizon.com/vzauth/UI/Login")
 
 driver.implicitly_wait(5)
