@@ -29,7 +29,7 @@ chromedriver_path = '/usr/local/bin/chromedriver' if current_platform == 'Linux'
 driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
 
 # Delete file if it already exists
-pdf_path = "/Users/dbelle/Downloads/paper-bill.pdf" if current_platform == 'Darwin' else "/path/to/your/ubuntu/pdf/location/paper-bill.pdf"
+pdf_path = "/home/dbelle/Downloads/paper-bill.pdf" if current_platform == 'Darwin' else "/path/to/your/ubuntu/pdf/location/paper-bill.pdf"
 
 try:
     os.remove(pdf_path)
