@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/bas
+#run_fios_script.sh is used to run the cron jobh
 # Source your .bash_profile or .bashrc
 source /home/dbelle/.getfios_secure.sh
 
