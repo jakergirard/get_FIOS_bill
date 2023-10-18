@@ -61,33 +61,33 @@ sender_email = "tt5775030@gmail.com"
 driver.get("https://secure.verizon.com/vzauth/UI/Login")
 
 driver.implicitly_wait(5)
-
+###Login
 username_textbox = driver.find_element(By.ID, "IDToken1")
 username_textbox.send_keys(username)
+
+login_button = driver.find_element(By.ID, "continueBtn")
+login_button.click()
 
 password_textbox = driver.find_element(By.ID, "IDToken2")
 password_textbox.send_keys(password)
 
-login_button = driver.find_element(By.ID, "login-submit")
-login_button.submit()
+login_button = driver.find_element(By.ID, "continueBtn")
+login_button.click()
 
-# Challenge Question
-
-
-def check_exists_by_xpath(xpath):
-    try:
-        driver.find_element(By.XPATH, xpath)
-    except NoSuchElementException:
-        return False
-    return True
-
-
-if check_exists_by_xpath("//input[@id='IDToken1']"):
-    secret_question = driver.find_element(By.ID, "IDToken1")
-    secret_question.send_keys(secret_question_answer)
-    continue_button = driver.find_element(By.ID, "otherButton")
-    continue_button.submit()
-
+### Challenge Question
+# def check_exists_by_xpath(xpath):
+#     try:
+#         driver.find_element(By.XPATH, xpath)
+#     except NoSuchElementException:
+#         return False
+#     return True
+#
+#
+# if check_exists_by_xpath("//input[@id='IDToken1']"):
+#     secret_question = driver.find_element(By.ID, "IDToken1")
+#     secret_question.send_keys(secret_question_answer)
+#     continue_button = driver.find_element(By.ID, "otherButton")
+#     continue_button.submit()
 
 driver.implicitly_wait(20)
 
