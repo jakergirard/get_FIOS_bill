@@ -19,13 +19,13 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 
-def main():
 
-# Detect the current platform
+def main():
+    # Detect the current platform
     current_platform = platform.system()
 
     # Set up Chrome options
-    options = webdriver.ChromeOptions()
+    options = Options()
 
     if current_platform == 'Linux':
         # Set up headless mode for Linux (Ubuntu server)
@@ -36,14 +36,10 @@ def main():
     # Set download directory depending on the platform
     download_directory = "/home/dbelle/Downloads" if current_platform == 'Linux' else "/Users/dbelle/Downloads"
 
-    prefs = {"download.default_directory" : download_directory}
-    options.add_experimental_option("prefs",prefs)
+    prefs = {"download.default_directory": download_directory}
+    options.add_experimental_option("prefs", prefs)
 
-    chromedriver_path = '/usr/local/bin/chromedriver' if current_platform == 'Linux' else '/Users/dbelle/Documents/dbelle_scripts/get_FIOS_bill/chromedriver'
-
-    # Initialize the webdriver with the new syntax
-    #driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
-    s=Service(ChromeDriverManager().install())
+    s = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=s, options=options)
 
     # Delete file if it already exists
@@ -61,37 +57,21 @@ def main():
     secret_question_answer = os.environ.get('SECRET_QUESTION')
     sender_email = "tt5775030@gmail.com"
 
-
     driver.get("https://secure.verizon.com/vzauth/UI/Login")
 
-driver.implicitly_wait(5)
-###Login
-username_textbox = driver.find_element(By.ID, "IDToken1")
-username_textbox.send_keys(username)
+    driver.implicitly_wait(5)
+    # Login
+    username_textbox = driver.find_element(By.ID, "IDToken1")
+    username_textbox.send_keys(username)
 
-login_button = driver.find_element(By.ID, "continueBtn")
-login_button.click()
+    login_button = driver.find_element(By.ID, "continueBtn")
+    login_button.click()
 
-password_textbox = driver.find_element(By.ID, "IDToken2")
-password_textbox.send_keys(password)
+    password_textbox = driver.find_element(By.ID, "IDToken2")
+    password_textbox.send_keys(password)
 
-login_button = driver.find_element(By.ID, "continueBtn")
-login_button.click()
-
-### Challenge Question
-# def check_exists_by_xpath(xpath):
-#     try:
-#         driver.find_element(By.XPATH, xpath)
-#     except NoSuchElementException:
-#         return False
-#     return True
-#
-#
-# if check_exists_by_xpath("//input[@id='IDToken1']"):
-#     secret_question = driver.find_element(By.ID, "IDToken1")
-#     secret_question.send_keys(secret_question_answer)
-#     continue_button = driver.find_element(By.ID, "otherButton")
-#     continue_button.submit()
+    login_button = driver.find_element(By.ID, "continueBtn")
+    login_button.click()
 
     driver.implicitly_wait(20)
 
@@ -101,7 +81,8 @@ login_button.click()
     # Wait for the download link to become clickable
     wait = WebDriverWait(driver, 10)
     download_link_text = "Download PDF"  # adjust as needed
-    download = wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, download_link_text)))
+    download = wait.until(EC.element_to_be_clickable(
+        (By.PARTIAL_LINK_TEXT, download_link_text)))
 
     # Scroll the download link into view and click it
     driver.execute_script("arguments[0].scrollIntoView();", download)
@@ -125,34 +106,29 @@ login_button.click()
     # Add body to email
     message.attach(MIMEText(body, "plain"))
 
-    #filename = "/Users/dbelle/Downloads/paper-bill.pdf"  # In same directory as script
+    # filename = "/Users/dbelle/Downloads/paper-bill.pdf"  # In same directory as script
     filename = "/home/dbelle/Downloads/paper-bill.pdf" if current_platform == 'Linux' else "/Users/dbelle/Downloads/paper-bill.pdf"
 
     # Open PDF file in binary mode
     with open(filename, "rb") as attachment:
-        # Add file as application/octet-stream
-        # Email client can usually download this automatically as attachment
         part = MIMEBase("application", "octet-stream")
         part.set_payload(attachment.read())
 
-    # Encode file in ASCII characters to send by email
-    encoders.encode_base64(part)
+        encoders.encode_base64(part)
 
-    # Add header as key/value pair to attachment part
-    part.add_header(
-        "Content-Disposition",
-        f"attachment; filename= {filename}",
-    )
+        part.add_header(
+            "Content-Disposition",
+            f"attachment; filename= {filename}",
+        )
 
-    # Add attachment to message and convert message to string
-    message.attach(part)
-    text = message.as_string()
+        message.attach(part)
+        text = message.as_string()
 
-    # Log in to server using secure context and send email
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
         server.login(sender_email, password_email)
         server.sendmail(sender_email, receiver_email, text)
+
 
 if __name__ == "__main__":
     try:
