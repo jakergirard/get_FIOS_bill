@@ -55,7 +55,7 @@ def main():
     password_email = os.environ.get('PASSWORD_EMAIL')
     receiver_email = os.environ.get('RECEIVER_EMAIL')
     secret_question_answer = os.environ.get('SECRET_QUESTION')
-    sender_email = "tt5775030@gmail.com"
+    sender_email = os.environ.get('SENDER_EMAIL')
 
     driver.get("https://secure.verizon.com/vzauth/UI/Login")
 
@@ -72,6 +72,23 @@ def main():
 
     login_button = driver.find_element(By.ID, "continueBtn")
     login_button.click()
+
+    # Handle "Remember this device?" if it appears
+    try:
+        radio_button = driver.find_element(By.ID, "emailReset")
+        radio_button.click()
+        continue_button = driver.find_element(By.ID, "continueBtn")
+        continue_button.click()
+    except NoSuchElementException:
+        print("Remember device option not found, continuing...")
+
+    # Handle secret question if it appears
+    try:
+        secret_question_field = driver.find_element(By.ID, "IDToken2")
+        secret_question_field.send_keys(secret_question_answer)
+        continue_button.click()
+    except NoSuchElementException:
+        print("Secret question not found, continuing...")
 
     driver.implicitly_wait(20)
 

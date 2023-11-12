@@ -2,3 +2,4 @@
 .DS_Store
 chromedriver
 get_FIOS_bill_env/*
+get_FIOS_bill_env
