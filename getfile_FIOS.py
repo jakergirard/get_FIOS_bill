@@ -21,6 +21,15 @@ from selenium.webdriver.chrome.options import Options
 
 
 def main():
+    # Set variables
+    username_pc = ''
+    username_fios = ''
+    password_fios = ''
+    secret_question_answer_fios = ''
+    receiver_email = ''
+    sender_email = ''
+    password_email = ''    
+    
     # Detect the current platform
     current_platform = platform.system()
 
@@ -34,58 +43,61 @@ def main():
         options.add_argument('--disable-dev-shm-usage')
 
     # Set download directory depending on the platform
-    download_directory = "/home/dbelle/Downloads" if current_platform == 'Linux' else "/Users/dbelle/Downloads"
+    download_directory = f"/home/{username_pc}/Downloads" if current_platform == 'Linux' else f"/Users/{username_pc}/Downloads"
 
     prefs = {"download.default_directory": download_directory}
     options.add_experimental_option("prefs", prefs)
 
     s = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=s, options=options)
-
+    
     # Delete file if it already exists
-    pdf_path = "/home/dbelle/Downloads/paper-bill.pdf" if current_platform == 'Linux' else "/Users/dbelle/Downloads/paper-bill.pdf"
+    pdf_path = f"/home/{username_pc}/Downloads/paper-bill.pdf" if current_platform == 'Linux' else f"/Users/{username_pc}/Downloads/paper-bill.pdf"
     try:
         os.remove(pdf_path)
     except OSError:
         pass
 
-    # Auth using env variables
-    username = os.environ.get('USERNAME')
-    password = os.environ.get('PASSWORD')
-    password_email = os.environ.get('PASSWORD_EMAIL')
-    receiver_email = os.environ.get('RECEIVER_EMAIL')
-    secret_question_answer = os.environ.get('SECRET_QUESTION')
-    sender_email = os.environ.get('SENDER_EMAIL')
-
     driver.get("https://secure.verizon.com/vzauth/UI/Login")
-
+    
+    # Wait for the page to load
     driver.implicitly_wait(5)
+	
     # Login
     username_textbox = driver.find_element(By.ID, "IDToken1")
-    username_textbox.send_keys(username)
+    driver.execute_script("arguments[0].scrollIntoView(true);", username_textbox)
+    username_textbox.send_keys(username_fios)
 
     login_button = driver.find_element(By.ID, "continueBtn")
+    driver.execute_script("arguments[0].scrollIntoView(true);", login_button)
     login_button.click()
 
     password_textbox = driver.find_element(By.ID, "IDToken2")
-    password_textbox.send_keys(password)
+    driver.execute_script("arguments[0].scrollIntoView(true);", password_textbox)
+    password_textbox.send_keys(password_fios)
 
     login_button = driver.find_element(By.ID, "continueBtn")
+    driver.execute_script("arguments[0].scrollIntoView(true);", login_button)
     login_button.click()
 
     # Handle "Remember this device?" if it appears
-    try:
+    try: 
         radio_button = driver.find_element(By.ID, "emailReset")
+        driver.execute_script("arguments[0].scrollIntoView(true);", radio_button)
         radio_button.click()
         continue_button = driver.find_element(By.ID, "continueBtn")
+        driver.execute_script("arguments[0].scrollIntoView(true);", continue_button)
         continue_button.click()
+        
     except NoSuchElementException:
         print("Remember device option not found, continuing...")
 
     # Handle secret question if it appears
-    try:
+    try:    
         secret_question_field = driver.find_element(By.ID, "IDToken2")
-        secret_question_field.send_keys(secret_question_answer)
+        driver.execute_script("arguments[0].scrollIntoView(true);", secret_question_field)
+        continue_button = driver.find_element(By.ID, 'continueBtn')
+        secret_question_field.send_keys(secret_question_answer_fios)
         continue_button.click()
     except NoSuchElementException:
         print("Secret question not found, continuing...")
@@ -93,6 +105,7 @@ def main():
     driver.implicitly_wait(20)
 
     view_bill = driver.find_element(By.PARTIAL_LINK_TEXT, "View Bill Detail")
+    driver.execute_script("arguments[0].scrollIntoView(true);", view_bill)
     view_bill.click()
 
     # Wait for the download link to become clickable
@@ -102,7 +115,7 @@ def main():
         (By.PARTIAL_LINK_TEXT, download_link_text)))
 
     # Scroll the download link into view and click it
-    driver.execute_script("arguments[0].scrollIntoView();", download)
+    driver.execute_script("arguments[0].scrollIntoView(true);", download)
     time.sleep(1)  # Wait for 1 second
     download.click()
 
@@ -111,8 +124,8 @@ def main():
     driver.close()
 
     # Create a secure SSL context
-    subject = "An email with attachment from Python"
-    body = "This is an email with attachment sent from Python"
+    subject = "GetFiOSBill Script Output"
+    body = "This is the GetFiOSBill script output. The FiOS bill should be attached to this email in PDF form."
 
     # Create a multipart message and set headers
     message = MIMEMultipart()
@@ -123,8 +136,8 @@ def main():
     # Add body to email
     message.attach(MIMEText(body, "plain"))
 
-    # filename = "/Users/dbelle/Downloads/paper-bill.pdf"  # In same directory as script
-    filename = "/home/dbelle/Downloads/paper-bill.pdf" if current_platform == 'Linux' else "/Users/dbelle/Downloads/paper-bill.pdf"
+    # Filename
+    filename = f"/home/{username_pc}/Downloads/paper-bill.pdf" if current_platform == 'Linux' else f"/Users/{username_pc}/Downloads/paper-bill.pdf"
 
     # Open PDF file in binary mode
     with open(filename, "rb") as attachment:
@@ -135,7 +148,7 @@ def main():
 
         part.add_header(
             "Content-Disposition",
-            f"attachment; filename= {filename}",
+            "attachment; filename= paper-bill.pdf",
         )
 
         message.attach(part)
